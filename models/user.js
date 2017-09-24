@@ -51,3 +51,13 @@ module.exports.registerUser = function(newUser, callback) {
         });
     });
 }
+
+module.exports.comparePassword = function(candidatePassword, hash, callback) {
+    bcrypt.compare(candidatePassword, hash, (err, isMatched) => {
+        if(err) {
+            console.log('Error comparing password...', err);
+        }
+
+        callback(null, isMatched);
+    });
+}
