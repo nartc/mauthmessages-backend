@@ -6,13 +6,37 @@ const mongojs = require('mongojs');
 const Message = require('../models/message');
 const User = require('../models/user');
 
-router.post('/addMessage', passport.authenticate('jwt', {session:false}), (req, res, next) => {
-    User.findById(req.user._id, (err, user) => {
+router.get('/messages', (req, res, next) => {
+    Message.getMessages((err, messages) => {
         if(err) {
             return res.json({
                 success: false,
                 msg: 'Error Occurred',
                 err: err
+            });
+        }
+        res.json({
+            success: true,
+            msg: 'Messages fetched',
+            messages: messages
+        });
+    });
+});
+
+router.post('/addMessage', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+    User.findById(req.user._id, (err, user) => {
+        if(err) {
+            res.json({
+                success: false,
+                msg: 'Error Occurred',
+                err: err
+            });
+        }
+
+        if(!user) {
+            res.json({
+                success: false,
+                msg: 'Not authenticated',
             });
         }
         

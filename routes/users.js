@@ -93,4 +93,21 @@ router.get('/profile', passport.authenticate('jwt', {session:false}), (req, res,
     res.json({user: req.user});
 });
 
+router.get('/getUserById/:id', (req, res, next) => {
+    User.getUserById(req.params.id, (err, result) => {
+        if(err) {
+            return res.json({
+                success: false,
+                message: 'Error',
+                err: err
+            });
+        }
+        res.json({
+            success: true,
+            msg: 'User fetched',
+            obj: result
+        });
+    });
+});
+
 module.exports = router;

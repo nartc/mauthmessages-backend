@@ -27,3 +27,7 @@ const Message = module.exports = mongoose.model('Message', MessageSchema);
 module.exports.addMessage = function(newMessage, callback) {
     newMessage.save(callback);
 }
+
+module.exports.getMessages = function(callback) {
+    Message.find(callback);
+}
