@@ -20,7 +20,7 @@ mongoose.connection.on('connected', () => {
 
 //On Database Error Connection
 mongoose.connection.on('error', (err) => {
-    oonsole.log('Database connection error: ' +err);
+    console.log('Database connection error: ' +err);
 });
 
 //Initialize Express App Variable
