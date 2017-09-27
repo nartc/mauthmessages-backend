@@ -895,11 +895,12 @@ module.exports = "<h3>Sign Up</h3>\r\n<br>\r\n<form [formGroup]=\"signUpForm\" (
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_auth_service__ = __webpack_require__("../../../../../src/app/services/auth.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__password_validation__ = __webpack_require__("../../../../../src/app/components/signup/password-validation.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_angular_sweetalert_service_js__ = __webpack_require__("../../../../angular-sweetalert-service/js/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_auth_service__ = __webpack_require__("../../../../../src/app/services/auth.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__password_validation__ = __webpack_require__("../../../../../src/app/components/signup/password-validation.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_angular_sweetalert_service_js__ = __webpack_require__("../../../../angular-sweetalert-service/js/index.js");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SignupComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -915,27 +916,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var SignupComponent = (function () {
-    function SignupComponent(fB, authService, alertService) {
+    function SignupComponent(fB, authService, alertService, router) {
         this.fB = fB;
         this.authService = authService;
         this.alertService = alertService;
+        this.router = router;
         this.emailRegex = "[^ @]*@[^ @]*";
     }
     SignupComponent.prototype.ngOnInit = function () {
         this.signUpForm = this.fB.group({
-            firstName: new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* Validators */].required),
-            lastName: new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* Validators */].required),
-            email: new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* Validators */].compose([
-                __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* Validators */].required,
-                __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* Validators */].pattern(this.emailRegex)
+            firstName: new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required),
+            lastName: new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required),
+            email: new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].compose([
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required,
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].pattern(this.emailRegex)
             ])),
-            password: new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* Validators */].compose([
-                __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* Validators */].required,
-                __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* Validators */].minLength(6)
+            password: new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].compose([
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required,
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].minLength(6)
             ])),
-            verifyPassword: new __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["d" /* Validators */].required)
-        }, { validator: __WEBPACK_IMPORTED_MODULE_3__password_validation__["a" /* PasswordValidation */].MatchPassword });
+            verifyPassword: new __WEBPACK_IMPORTED_MODULE_2__angular_forms__["c" /* FormControl */](null, __WEBPACK_IMPORTED_MODULE_2__angular_forms__["d" /* Validators */].required)
+        }, { validator: __WEBPACK_IMPORTED_MODULE_4__password_validation__["a" /* PasswordValidation */].MatchPassword });
     };
     SignupComponent.prototype.onSignUpSubmit = function (value) {
         var _this = this;
@@ -950,6 +953,16 @@ var SignupComponent = (function () {
             if (data.success) {
                 console.log('New user added', data.user);
                 _this.signUpForm.reset();
+                _this.alertService.confirm({
+                    title: data.message,
+                    text: 'Congrats! You are able to sign in now',
+                    type: 'success',
+                    confirmButtonText: 'Go to sign in',
+                    showCancelButton: true
+                })
+                    .then(function () {
+                    _this.router.navigate(['/auth/signin']);
+                });
             }
             else {
                 console.log('Error adding new user', data.err);
@@ -966,15 +979,15 @@ var SignupComponent = (function () {
     return SignupComponent;
 }());
 SignupComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_core__["Component"])({
         selector: 'app-signup',
         template: __webpack_require__("../../../../../src/app/components/signup/signup.component.html"),
         styles: ["\n        span.input-group-addon{\n            color: #37b278;\n        }\n\n        #submitBtn:disabled{\n            cursor: not-allowed;\n        }\n                \n        #submitBtn{\n            cursor: pointer;\n        }\n    "]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["e" /* FormBuilder */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["e" /* FormBuilder */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__services_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__services_auth_service__["a" /* AuthService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_4_angular_sweetalert_service_js__["a" /* SweetAlertService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_angular_sweetalert_service_js__["a" /* SweetAlertService */]) === "function" && _c || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormBuilder */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormBuilder */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__services_auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__services_auth_service__["a" /* AuthService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5_angular_sweetalert_service_js__["a" /* SweetAlertService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5_angular_sweetalert_service_js__["a" /* SweetAlertService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* Router */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_router__["a" /* Router */]) === "function" && _d || Object])
 ], SignupComponent);
 
-var _a, _b, _c;
+var _a, _b, _c, _d;
 //# sourceMappingURL=signup.component.js.map
 
 /***/ }),
