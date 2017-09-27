@@ -29,7 +29,7 @@ router.post('/addMessage', passport.authenticate('jwt', {session:false}), (req, 
             res.json({
                 success: false,
                 msg: 'Error Occurred',
-                err: err
+                err: {message: 'Blah blah blah'}
             });
         }
 
@@ -50,7 +50,7 @@ router.post('/addMessage', passport.authenticate('jwt', {session:false}), (req, 
                 return res.json({
                     success: false,
                     msg: 'Error adding message',
-                    err: err
+                    err: {message: 'blah blah'}
                 });
             }
 
@@ -65,7 +65,7 @@ router.post('/addMessage', passport.authenticate('jwt', {session:false}), (req, 
     });
 });
 
-router.delete('/deleteMessage/:id', (req, res, next) => {
+router.delete('/deleteMessage/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
     Message.findById(req.params.id, (err, message) => {
         if(err) {
             return res.json({
@@ -80,6 +80,14 @@ router.delete('/deleteMessage/:id', (req, res, next) => {
                 msg: 'no message found'
             });
         }
+
+        if(JSON.stringify(message.user) != JSON.stringify(req.user._id)) {
+            return res.json({
+                    success: false,
+                    msg: 'Not authenticated',
+                   });
+        }
+
         message.remove((err, result) => {
             if(err) {
                 return res.json({
@@ -92,6 +100,48 @@ router.delete('/deleteMessage/:id', (req, res, next) => {
                 success: true,
                 msg: 'deleted',
                 message: result
+            });
+        });
+    });
+});
+
+router.patch('/editMessage/:id', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+    Message.findById(req.params.id, (err, message) => {
+        if(err) {
+            return res.json({
+                success: false,
+                msg: 'Error Occurred',
+                err: err
+            });
+        }
+        if(!message) {
+            return res.json({
+                success: false,
+                msg: 'No message found',
+                err: {message: 'Message not found'}
+            });
+        }
+
+        if(JSON.stringify(message.user) != JSON.stringify(req.user._id)) {
+            return res.json({
+                    success: false,
+                    msg: 'Not authenticated',
+                   });
+        }
+
+        message.content = req.body.message.content;
+        message.save((err, message) => {
+            if(err) {
+                return res.json({
+                    success: false,
+                    msg: 'Error Occurred',
+                    err: err
+                });
+            }
+            res.json({
+                success: true,
+                msg: 'Updated message',
+                message: message
             });
         });
     });

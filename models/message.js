@@ -13,12 +13,9 @@ const MessageSchema = mongoose.Schema({
 });
 
 MessageSchema.post('remove', function(message) {
-    console.log(message);
     User.findById(message.user, (err, user) => {
-        console.log(user);
         user.messages.pull(message);
         user.save();
-        console.log(user);
     });
 });
 
@@ -29,5 +26,7 @@ module.exports.addMessage = function(newMessage, callback) {
 }
 
 module.exports.getMessages = function(callback) {
-    Message.find(callback);
+    Message.find()
+        .populate('user','firstName')
+        .exec(callback);
 }
